@@ -73,7 +73,7 @@ class App extends Component {
   }
 
   socketConnection = (stream) => {
-    var socket = socketIOClient.connect("www.random.moe");   
+    var socket = socketIOClient.connect("merkroulette2.herokuapp.com");   
     this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Client", message:"Connecting to Server..."}]})
     socket.on('peer', (data) => {
       this.createPeer(data.initiator, stream);
