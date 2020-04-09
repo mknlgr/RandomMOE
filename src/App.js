@@ -73,7 +73,7 @@ class App extends Component {
 
   socketConnection = (stream) => {
     var socket = socketIOClient.connect("merkroulette2.herokuapp.com");   
-    this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Client", message:"Connecting to Server..."}]})
+    this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Merkle", message:"Verbinden met Server..."}]})
     socket.on('peer', (data) => {
       this.createPeer(data.initiator, stream);
       
@@ -81,13 +81,13 @@ class App extends Component {
       if(data.initiator) {
         this.state.peer.on("signal", (data) => {
           socket.emit("initiatorData", data);
-          this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Client", message:"Emitting Initiator data to Server..."}]})
+          this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Merkle", message:"Beschikbaarheid doorgeven aan de Server..."}]})
         })
       }
     });
 
       socket.on('joinInitiator', (data) => {
-        this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Client", message:"Joining Initiator..."}]})
+        this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Merkle", message:"Verbinden met collega..."}]})
         this.state.peer.signal(data.data);
  
 
@@ -95,7 +95,7 @@ class App extends Component {
           var initiaitorSocketId = data.socketid;
           this.state.peer.on('signal', (data) => {
             socket.emit("backToInitiator", {socketid: initiaitorSocketId, data: data});
-            this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Client", message:"Recieving Initiator's Data..."}]})
+            this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Merkle", message:"Data ontvangen van collega..."}]})
           })
         }
       })
@@ -103,7 +103,7 @@ class App extends Component {
       socket.on('toInitiatorFromServer', (data) => {
        
           this.state.peer.signal(data.data);  
-          this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Client", message:"Connecting to Peer..."}]})
+          this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Collega", message:"Verbinding maken met collega..."}]})
       })
   }
 
@@ -112,7 +112,7 @@ class App extends Component {
   }
 
   next = () => {
-    this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Client", message:"Finding User..."}]})
+    this.setState({chatMessages: [...this.state.chatMessages, {id: this.state.chatMessages.length, user: "Merkle", message:"Op zoek naar collega..."}]})
     if(this.state.peer != null && typeof this.state.peer != 'undefined') {
         this.state.peer.destroy();
         this.setState({
@@ -136,7 +136,7 @@ class App extends Component {
   this.setState({inConvo: true});
   
     peer.on("error", (err) => {
-      this.setState({chatMessages: [{id: this.state.chatMessages.length, user: "Client", message:  err.code + " Error. Try clicking next, or refreshing if problem persists"}]});
+      this.setState({chatMessages: [{id: this.state.chatMessages.length, user: "Merkle", message:  err.code + " Foutmelding. Verbind met een nieuwe collega of vernieuw de pagina."}]});
     })
 
     peer.on("connect", () => {
@@ -149,7 +149,7 @@ class App extends Component {
 
       if(data.isPublicKey === true) {
         sessionStorage.setItem("peerPublicKey", data.peerPublicKey);
-        this.setState({chatMessages: [{id: this.state.chatMessages.length, user: "Client", message:"You can now send messages!"}]});
+        this.setState({chatMessages: [{id: this.state.chatMessages.length, user: "Merkle", message:"Je kunt nu berichten verzenden!"}]});
 
       } else {
 
@@ -203,10 +203,10 @@ class App extends Component {
       try {
       openpgp.encrypt(options).then( (ciphertext) => {
         let data = ciphertext.data;
-        this.state.peer.send(JSON.stringify({user: 'Anon', data: data}));
+        this.state.peer.send(JSON.stringify({user: 'Collega', data: data}));
       });    
     } catch (err) {
-      this.setState({chatMessages: [{id: this.state.chatMessages.length, user: "Client", message:"There was an error sending the message..."}]});
+      this.setState({chatMessages: [{id: this.state.chatMessages.length, user: "Merkle", message:"Er is een fout opgetreden bij het verzenden van je bericht."}]});
     } 
   }
 
@@ -256,16 +256,24 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-<header id="header" class="flex"><h1><a href="/">Chatroulette</a></h1><ul class="control"><li><button>Start</button></li><li><button disabled="disabled">Next</button></li><li><button disabled="disabled">Stop</button></li></ul></header>	  
-      <div id = "videoChat">
-        <video ref = {clientRef => {this.clientRef = clientRef}} muted></video>
-        <video ref = {peerRef => {this.peerRef = peerRef}}></video>
-      </div>
-        <div id = "chatApp" class = "disableScrollbars">
+<header id="header" class="flex"><h1><a href="/"><img height="60" src="merkroulette.png" /></a></h1><ul class="control"><li><button type="button" onClick = {this.next} ref = {findUsers => {this.findUsers = findUsers}}>Connect/Swap</button></li></ul></header>
+	  <div id="container" class="flex">
+	  
+	  <aside id="webcam"><div class="partner"><h2>Partner</h2><video ref = {peerRef => {this.peerRef = peerRef}}></video></div><div class="you"><h2>You</h2><video ref = {clientRef => {this.clientRef = clientRef}} muted></video></div></aside>     
+        <div id="room" class="flex">
+		<ul id="messages">
           <Chat backgroundChatColor = {this.state.backgroundChatColor} chatMessages = {this.state.chatMessages} submit = {this.submitButton} />
-        </div>
-        {/* <NimblePicker set='messenger' data={data} /> */}
-        <CreateMessage createMessage =  {this.createMessage} peer = {this.peer} next = {this.next} />
+		  </ul>
+		  
+		  
+		  
+		  
+        
+			<CreateMessage createMessage =  {this.createMessage} peer = {this.peer} next = {this.next} />
+		
+		</div>
+		</div>
+		
       </div>
     );
   }

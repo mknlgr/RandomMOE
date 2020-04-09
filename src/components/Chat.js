@@ -20,15 +20,8 @@ class Chat extends Component {
  }
 
   render() {    
-   // console.log(this.props.chatMessages);
-/*  
-   if(typeof this.props.bgChatColor == 'undefined') {
-    this.props.bgChatColor = ['#FFDAB9', '#FFD700'];
-  }
-*/
-    return (
-       // <showButton />
 
+    return (
         this.props.chatMessages.map(chatItems => (
             <Messages backgroundChatColor = {this.state.backgroundChatColor} key = {chatItems.id} chatItems = {chatItems}/>
         
@@ -43,11 +36,3 @@ Chat.propTypes = {
 }
 
 export default Chat;
-
-/*
-
-        <video controls autoplay>
-          <source src="https://files.catbox.moe/d0sb20.mp4" type="video/mp4"></source>
-        </video>
-
-*/
