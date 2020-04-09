@@ -10,16 +10,18 @@ var http = require('http');
 
 dotenv.config();
 
-
+/*
 var https = require('https');
 var options = {
     key: fs.readFileSync(process.env.SSL_KEY),
     cert: fs.readFileSync(process.env.SSL_CERT),
     ca: fs.readFileSync(process.env.SSL_CA)
     }
+    
 var server = https.createServer(options, app);
-
-var serverUnsecure = http.createServer(app)
+*/
+//var serverUnsecure = http.createServer(app)
+var server = http.createServer(app)
 
 const io = require('socket.io')(server, {
   pingInterval: 5000,
@@ -28,7 +30,7 @@ const io = require('socket.io')(server, {
 
 const path = require('path');
 
-var port = process.env.PORT_SECURE || 443;
+//var port = process.env.PORT_SECURE || 443;
 var portUnsecure = process.env.PORT_UNSECURE || 80;
 var queue = [];
 
