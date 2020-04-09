@@ -60,7 +60,7 @@ app.get('/.well-known/acme-challenge/:file', function(req, res) {
 */
 
 server.listen(port);
-serverUnsecure.listen(portUnsecure);
+//serverUnsecure.listen(portUnsecure);
 
 io.on('connection', (socket) => {
   console.log("User Connected");
@@ -120,4 +120,4 @@ io.on('connection', (socket) => {
    io.to(socketData.socketid).emit("toInitiatorFromServer", data);
  })
 });
-  console.log("Server is listening on port(s): " + portUnsecure, port);
+  //console.log("Server is listening on port(s): " + portUnsecure, port);
