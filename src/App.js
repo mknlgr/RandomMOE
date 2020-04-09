@@ -2,9 +2,8 @@
 
 import React, { Component } from 'react';
 import Chat from './components/Chat';
-import SiteIntro from './components/SiteIntro';
+//import SiteIntro from './components/SiteIntro';
 import CreateMessage from './components/CreateMessage';
-import CanvasBackground from './components/CanvasBackground';
 import * as openpgp from 'openpgp';
 import './App.css';
 import Peer from 'simple-peer'; 
@@ -256,20 +255,17 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App"> 
-      <SiteIntro />
-
+      <div className="App">
+<header id="header" class="flex"><h1><a href="/">Chatroulette</a></h1><ul class="control"><li><button>Start</button></li><li><button disabled="disabled">Next</button></li><li><button disabled="disabled">Stop</button></li></ul></header>	  
       <div id = "videoChat">
-        <div><h3 id = "logo">Random.moe</h3> | <u onClick={ this.backgroundImage }>Custom Background</u> | <u onClick={ this.backgroundChatColor }>Custom Chat</u> <a target="_blank" href="https://www.patreon.com/randomMOE"><img style={{maxHeight: '30px' }} src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="I'm struggling pls"></img></a> | <a target="_blank" href="https://twitter.com/Twitch_NotDem"><img style={{maxHeight: '30px' }} src="https://img.icons8.com/color/48/000000/twitter.png" alt="Complain here lol"></img></a>| <a target="_blank" href="https://github.com/paradoxmoe/RandomMOE"><img style={{maxHeight: '30px' }} src="https://image.flaticon.com/icons/svg/25/25231.svg" alt="Complain here if u hate twitter lol"></img></a></div>
-        <video ref = {clientRef => {this.clientRef = clientRef}} controls muted></video>
-        <video ref = {peerRef => {this.peerRef = peerRef}} controls></video>
+        <video ref = {clientRef => {this.clientRef = clientRef}} muted></video>
+        <video ref = {peerRef => {this.peerRef = peerRef}}></video>
       </div>
         <div id = "chatApp" class = "disableScrollbars">
           <Chat backgroundChatColor = {this.state.backgroundChatColor} chatMessages = {this.state.chatMessages} submit = {this.submitButton} />
         </div>
         {/* <NimblePicker set='messenger' data={data} /> */}
         <CreateMessage createMessage =  {this.createMessage} peer = {this.peer} next = {this.next} />
-        <CanvasBackground backgroundImage = { this.state.backgroundImage }/>
       </div>
     );
   }
